@@ -1,0 +1,251 @@
+' Gambas class file
+
+Public publicTriggerStop As Boolean
+Public publicIntCountProcess As Integer
+Public publicFileSize As Integer       ' Bytes
+Public publicStringGrep As New String[]
+Public publicStringTarget As String
+Public publicStringCmdShellProcess As String
+Public publicStringCmdShellProcessCommand As String
+Public publicBaseCommand As String
+
+Sub Insert_Value_Grep(strValue As String, strGrep As String)
+  If Not IsNull(strValue) And Not IsNull(strGrep) Then
+   Dim strTMP As String
+   Dim strADD As String
+   strTMP = TextArea_CmdShellGrep.Text
+   strADD = strValue & " | " & strGrep
+   TextArea_CmdShellGrep.Text = strTMP & strADD & "\n"
+  Endif
+End
+
+Sub Open_File(strFile As String) As String[]
+  If Not IsNull(strFile) Then
+    Dim hFile As File
+    Dim sLine As String
+    Dim intCount As Integer
+    Dim strArray As New String[]
+    intCount = 0
+    hFile = Open strFile For Input
+    While Not Eof(hFile)
+      Line Input #hFile, sLine
+        strArray.Add(sLine, intCount)
+        Inc intCount
+    Wend
+    Return strArray
+  Endif
+End
+
+
+Sub Check_String_Grep_Process(strResultTerminal As String) As String
+  If Not IsNull(strResultTerminal) And Not IsNull(TextBox_FileSourceGrep.Text) Then
+    Dim strStringForGrep As String
+    Dim intResult As Boolean
+    Print strResultTerminal
+    For Each strStringForGrep In publicStringGrep
+     intResult = InStr(Lower(strResultTerminal), strStringForGrep)
+     If intResult == True Then
+       Print "DEBUG: " & intResult & strStringForGrep
+       Return strStringForGrep
+     Endif
+    Next
+  Endif
+End
+
+
+Sub GetFileSize(strFile As String) As String
+  Dim strReturnTotalLines As String
+  If Not IsNull(strFile) Then
+    strReturnTotalLines = Stat(strFile).Size
+    Return strReturnTotalLines
+  Endif
+End
+
+
+Sub GetFileTotaLines(strFile As String) As String
+  Dim strReturnSize As String
+  If Not IsNull(strFile) Then
+    strReturnSize = Trim$(Exec_Thing("cat " & strFile & "| wc -l"))
+    Return strReturnSize
+  Endif
+End
+
+Public Sub Button_ExecShell_Click()
+  Dim strCmd_Return As String
+  strCmd_Return = Trim$(TextArea_StringShell.Text)
+  If Not IsNull(strCmd_Return) Then
+    Exec(strCmd_Return)
+  Endif
+End
+
+
+Public Sub TextArea_StringShell_KeyPress()
+  If Key.Code = Key.Enter Then
+     Dim strCmd_Return As String
+     strCmd_Return = ReplaceString(TextArea_StringShell.Text, TextBox_MagicString.Text)
+     If Not IsNull(strCmd_Return) Then
+        Exec(strCmd_Return)
+     Endif
+  Endif
+End
+
+
+Public Sub FileChooser_SourceFile_Change()
+  If Not IsNull(FileChooser_SourceFile.SelectedPath) Then
+    TextBox_FileSource.Text = FileChooser_SourceFile.SelectedPath
+    Label_SourceSize.Text = GetFileSize(TextBox_FileSource.Text)
+    Label_TotalLinesSource.Text = GetFileTotaLines(TextBox_FileSource.Text)
+  Endif
+End
+
+
+Sub Exec(strCmdExec As String)
+ Wait 0.01
+ If Not IsNull(strCmdExec) Then
+   Inc publicIntCountProcess
+   Label_CountLoop.Text = publicIntCountProcess
+   Dim sOutput As String
+   Dim sTMP As String
+   Dim strGrep As String
+   Dim intDelay As Integer
+   Dim strLine As String
+   intDelay = SpinBox_Delay.Text
+   TextArea_CmdShellProcessCommand.Text = strCmdExec
+   Shell strCmdExec To sOutput
+   If Not IsNull(sOutput) Then
+    sTMP = TextArea_CmdShellProcess.Text
+    strLine = "-------------------------------------------------------------------------------------------------\n"
+    strGrep = Check_String_Grep_Process(sOutput)
+  
+    If Not IsNull(strGrep) Then
+      Insert_Value_Grep(publicStringTarget, strGrep)
+      strGrep = "[ + ] GREP: " & strGrep & "\n"
+    Endif
+   
+    TextArea_CmdShellProcess.Text = sTMP & sOutput & strGrep & strLine
+   Wait intDelay
+   Endif
+ Endif
+End
+Sub Exec_Thing(strCmdExec As String) As String
+ If Not IsNull(strCmdExec) Then
+   Dim sOutput As String
+   Shell strCmdExec To sOutput
+   Return sOutput
+ Endif
+End
+
+
+Sub ReplaceString(strCmd As String, strNewValue As String) As String
+  Dim strCmd_Return As String
+  If Not IsNull(strNewValue) And Not IsNull(strCmd) Then
+    If Not IsNull(TextBox_MagicString.Text) Then
+      strCmd_Return = Replace$(strCmd, TextBox_MagicString.Text, strNewValue)
+      Return strCmd_Return
+    Endif
+  Endif
+End
+
+
+Sub ActionShellLoop() As Boolean
+  Dim hFile As File
+  Dim sLine As String
+  Dim strCmd As String
+  Dim sFile As String
+  sFile = TextBox_FileSource.Text
+  hFile = Open sFile For Input
+  While Not Eof(hFile)
+    If (publicTriggerStop == True) Then
+      Return publicTriggerStop
+    Endif
+    Line Input #hFile, sLine
+      strCmd = ReplaceString(publicBaseCommand, sLine)
+      publicStringTarget = sLine
+      Exec(strCmd)
+      Print strCmd
+  Wend
+End
+
+Public Sub Button_StartProcess_Click()
+  Select Message.Question("<b>Do you want to start the process?</b>", "Yes", "No")
+    Case 1
+      If Not IsNull(TextBox_FileSource.Text) And Not IsNull(TextArea_StringShell.Text) Then 
+        IconPanel_Terminal.Index = 0
+        publicTriggerStop = False
+        publicStringGrep = Open_File(TextBox_FileSourceGrep.Text)
+        publicBaseCommand = TextArea_StringShell.Text
+        ActionShellLoop()
+      Else
+        Message.Error("<b>Set the File Source and String Shell</b>")
+      Endif
+  End Select
+End
+
+Public Sub FileChooser_SourceFileGrep_Change()
+  If Not IsNull(FileChooser_SourceFileGrep.SelectedPath) Then
+    TextBox_FileSourceGrep.Text = FileChooser_SourceFileGrep.SelectedPath
+  Endif
+End
+
+
+Public Sub Button_CatViewFileSource_Click()
+  If Not IsNull(TextBox_FileSource.Text) Then
+    IconPanel_Terminal.Index = 1
+    TextArea_CmdShellCat.Text = Exec_Thing("cat " & TextBox_FileSource.Text)
+  Else
+    Message.Error("<b>Set the value File Source</b>")
+  Endif
+End
+
+
+Public Sub Button_CatViewFileSourceGrep_Click()
+  If Not IsNull(TextBox_FileSourceGrep.Text) Then
+    IconPanel_Terminal.Index = 1
+    TextArea_CmdShellCat.Text = Exec_Thing("cat " & TextBox_FileSourceGrep.Text)
+  Else
+    Message.Error("<b>Set the value File Grep</b>")
+  Endif  
+End
+
+Public Sub Form_Show()
+  publicTriggerStop = True
+  publicIntCountProcess = 0
+End
+
+Public Sub Button_ExecShellStop_Click()
+  If publicTriggerStop == False Then
+    Select Message.Question("<b>Do you want to stop the process?</b>", "Yes", "No")
+      Case 1
+        publicTriggerStop = True
+    End Select
+  Endif
+End
+
+Public Sub Button_Info_Click()
+  FormInfo.ShowDialog()
+End
+
+
+Public Sub Button_ClearAll_Click()
+  Select Message.Question("<b>Do you want to clear all fields?</b>", "Yes", "No")
+    Case 1
+      TextArea_StringShell.Text = ""
+      TextArea_CmdShellCat.Text = ""
+      TextArea_CmdShellProcess.Text = ""
+      Label_SourceSize.Text = "0000"
+      Label_TotalLinesSource.Text = "0000"
+      Label_CountLoop.Text = "00000"
+  End Select
+End
+
+Public Sub Timer_ProcessShell_Timer()
+
+End
+
+
+
+Public Sub Button_InfoExamples_Click()
+
+  FormExample.ShowDialog()
+
+End

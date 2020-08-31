@@ -1,0 +1,30 @@
+# Gambas Form File 3.0
+
+{ Form Form
+  Move(0,0,553,728)
+  #Scaled = False
+  Background = &H200040&
+  Text = ("About")
+  Icon = Picture["icon:/32/info"]
+  Resizable = False
+  { PictureBox_Logo PictureBox
+    Move(105,35,371,371)
+    Picture = Picture["logo.png"]
+  }
+  { TextArea_Infos TextArea
+    Move(56,504,483,112)
+    Font = Font["Monospace,+3"]
+    Background = &H200040&
+    Foreground = &HFFFFFF&
+    Text = (" + Autor Script: MrCl0wn\n + Blog: http://blog.mrcl0wn.com\n + GitHub: https://github.com/MrCl0wnLab\n + Twitter: https://twitter.com/MrCl0wnLab\n + Email: mrcl0wnlab\\@\\gmail.com")
+    Border = False
+  }
+  { TextArea_Infos2 TextArea
+    Move(63,413,483,56)
+    Font = Font["Monospace,+3,Italic"]
+    Background = &H200040&
+    Foreground = &H00FF7F&
+    Text = ("GambaShell program designed to \noptimize work done on the linux terminal")
+    Border = False
+  }
+}

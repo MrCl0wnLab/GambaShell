@@ -1,0 +1,17 @@
+# Gambas Project File 3.0
+Title=Mr. Cl0wn - H4ck1ng C0d3r MrCl0wnLab
+Startup=FMain
+Version=0.0.16
+Component=gb.image
+Component=gb.qt5
+Component=gb.form
+Component=gb.term
+Component=gb.form.terminal
+Component=gb.qt5.webkit
+Description="Programada feito para otimizar testes via terminal.\n\nCOMANDO X LOOP + GREP"
+Authors="https://github.com/MrCl0wnLab"
+TabSize=2
+Language=en_US
+SourcePath=/home/cleiton/Documentos
+Vendor=MrC0wn
+Packager=1

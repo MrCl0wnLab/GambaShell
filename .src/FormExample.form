@@ -1,0 +1,18 @@
+# Gambas Form File 3.0
+
+{ Form Form
+  Move(0,0,1176,525)
+  #Scaled = False
+  Background = &H300060&
+  Text = ("Examples")
+  Icon = Picture["icon:/32/book"]
+  Resizable = False
+  Sticky = True
+  { TextArea1 TextArea
+    Move(7,7,1162,504)
+    Font = Font["Monospace,+6"]
+    Background = &H200040&
+    Foreground = Color.Green
+    Text = ("echo 'FUZZ' |xargs -P1000 -I@ sh -c 'curl -v  http://@ --connect-timeout 1 -k -L'\n----------------------------\nping -c 1 FUZZ -4 -w 1\n----------------------------\nhost FUZZ\n----------------------------\npython exemple.py FUZZ\n----------------------------\npython exemple.py --target FUZZ\n----------------------------\nhost FUZZ.teste.com\n----------------------------\ncat FUZZ.txt | grep 'admin'>>result.txt\n----------------------------\ncat output.txt | grep 'FUZZ'\n----------------------------\npython exploit.py --target FUZZ/file_vuln.php")
+  }
+}

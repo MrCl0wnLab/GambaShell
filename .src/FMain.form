@@ -1,0 +1,267 @@
+# Gambas Form File 3.0
+
+{ Form Form
+  Move(0,0,1610,1148)
+  #Scaled = False
+  Background = &H300060&
+  Text = ("GambasShell - MrCl0wnLab")
+  Icon = Picture["logo.png"]
+  Resizable = False
+  Sticky = True
+  Opacity = 99
+  AutoResize = True
+  { TextArea_StringShell TextArea
+    Move(175,7,1428,224)
+    Font = Font["Monospace,+4"]
+    Background = &H5000A0&
+    Foreground = &HFFFFFF&
+    Text = ("curl -v FUZZ")
+    Wrap = True
+    ScrollBar = Scroll.Vertical
+  }
+  { Panel2 Panel
+    Move(931,217,672,448)
+    Border = Border.Etched
+    { TabStrip2 TabStrip
+      Move(7,28,658,560)
+      Background = &H5000A0&
+      Count = 2
+      Index = 0
+      Text = ("Select File Source")
+      Picture = Picture["icon:/16/insert-text"]
+      { FileChooser_SourceFile FileChooser
+        Move(0,0,651,525)
+        Background = &H5000A0&
+        Foreground = &HA0A0A0&
+        Border = False
+        ShowBookmark = False
+        ShowFile = False
+      }
+      Index = 1
+      Text = ("Select File Grep")
+      Picture = Picture["icon:/16/spell-check"]
+      { FileChooser_SourceFileGrep FileChooser
+        Move(0,0,651,525)
+        Background = &H5000A0&
+        Foreground = &HA0A0A0&
+        Border = False
+        ShowBookmark = False
+        ShowFile = False
+      }
+      Index = 0
+    }
+  }
+  { Panel1 Panel
+    Move(931,651,672,483)
+    Foreground = &HFFFFFF&
+    Border = Border.Etched
+    { TabStrip1 TabStrip
+      Move(7,28,658,448)
+      Background = &H5000A0&
+      Foreground = &HC0C0C0&
+      Index = 0
+      Text = ("Config")
+      Picture = Picture["icon:/48/options"]
+      { TextBox_FileSource TextBox
+        Move(147,42,399,35)
+        Font = Font["Monospace,+2"]
+        Background = &H5000A0&
+        Foreground = &HFFFFFF&
+      }
+      { Label1 Label
+        Move(21,42,105,28)
+        Font = Font["Monospace,+2"]
+        Foreground = &H400080&
+        Text = ("File source:")
+      }
+      { Label2 Label
+        Move(21,126,119,28)
+        Font = Font["Monospace,+2"]
+        Foreground = &H400080&
+        Text = ("Magic string:")
+      }
+      { TextBox_MagicString TextBox
+        Move(147,126,217,35)
+        Font = Font["Monospace,+2"]
+        Background = &H5000A0&
+        Foreground = &HFFFFFF&
+        Text = ("FUZZ")
+      }
+      { Label3 Label
+        Move(21,168,119,28)
+        Font = Font["Monospace,+2"]
+        Foreground = &H400080&
+        Text = ("Delay Loop:")
+      }
+      { SpinBox_Delay SpinBox
+        Move(147,168,217,28)
+        Font = Font["Monospace,+2"]
+        Background = &H400080&
+        Foreground = &H400080&
+        Value = 1
+      }
+      { Button_CatViewFileSource Button
+        Move(553,42,84,35)
+        Font = Font["Monospace,+2"]
+        Background = &H5000A0&
+        Foreground = &HFFFFFF&
+        Mouse = Mouse.Pointing
+        Text = ("Cat")
+        Picture = Picture["icon:/16/text"]
+      }
+      { Separator1 Separator
+        Move(189,231,35,161)
+      }
+      { Label4 Label
+        Move(14,217,140,28)
+        Font = Font["Monospace"]
+        Foreground = &H400080&
+        Text = ("SIZE FILE SOURCE")
+      }
+      { Label_SourceSize Label
+        Move(14,245,189,56)
+        Font = Font["Monospace,+11"]
+        Foreground = &H300060&
+        Text = ("0000")
+      }
+      { Label6 Label
+        Move(224,217,140,28)
+        Font = Font["Monospace"]
+        Foreground = &H400080&
+        Text = ("COUNT LOOP")
+      }
+      { Label_CountLoop Label
+        Move(224,238,413,168)
+        Font = Font["Monospace,+20"]
+        Foreground = &H300060&
+        Text = ("00000")
+      }
+      { Label5 Label
+        Move(21,84,105,28)
+        Font = Font["Monospace,+2"]
+        Foreground = &H400080&
+        Text = ("File Grep:")
+      }
+      { TextBox_FileSourceGrep TextBox
+        Move(147,84,399,35)
+        Font = Font["Monospace,+2"]
+        Background = &H5000A0&
+        Foreground = &HFFFFFF&
+      }
+      { Button_CatViewFileSourceGrep Button
+        Move(553,84,84,35)
+        Font = Font["Monospace,+2"]
+        Background = &H5000A0&
+        Foreground = &HFFFFFF&
+        Mouse = Mouse.Pointing
+        Text = ("Cat")
+        Picture = Picture["icon:/16/text"]
+      }
+      { Label7 Label
+        Move(14,308,140,28)
+        Font = Font["Monospace"]
+        Foreground = &H400080&
+        Text = ("TOTAL LINES SOURCE")
+      }
+      { Label_TotalLinesSource Label
+        Move(14,336,189,63)
+        Font = Font["Monospace,+11"]
+        Foreground = &H300060&
+        Text = ("0000")
+      }
+      { Timer_ProcessShell #Timer
+        #Move(406,133)
+      }
+      Index = 0
+    }
+  }
+  { Button_ExecShell Button
+    Move(7,105,161,77)
+    Font = Font["Monospace"]
+    Background = &H5000A0&
+    Foreground = &HFFFFFF&
+    Mouse = Mouse.Pointing
+    Text = ("Shell")
+  }
+  { IconPanel_Terminal IconPanel
+    Move(7,238,917,896)
+    Font = Font["Monospace"]
+    Background = &H5000A0&
+    Count = 3
+    Border = True
+    Index = 0
+    Text = ("Shell Process")
+    Picture = Picture["icon:/32/terminal"]
+    { TextArea_CmdShellProcess TextArea
+      Move(7,126,735,763)
+      Background = &H200040&
+      Foreground = Color.Green
+    }
+    { TextArea_CmdShellProcessCommand TextArea
+      Move(7,7,735,112)
+      Background = &H200040&
+      Foreground = Color.Green
+      Wrap = True
+    }
+    Index = 1
+    Text = ("Cat File")
+    Picture = Picture["icon:/32/watch"]
+    { TextArea_CmdShellCat TextArea
+      Move(7,7,735,882)
+      Background = &H200040&
+      Foreground = Color.Green
+    }
+    Index = 2
+    Text = ("Grep Result")
+    Picture = Picture["icon:/32/spell-check"]
+    { TextArea_CmdShellGrep TextArea
+      Move(7,7,735,882)
+      Background = &H200040&
+      Foreground = Color.Green
+    }
+    Index = 0
+  }
+  { Button_StartProcess Button
+    Move(7,7,161,91)
+    Font = Font["Monospace"]
+    Background = &H00A000&
+    Foreground = &HFFFFFF&
+    Mouse = Mouse.Pointing
+    Text = ("Start")
+  }
+  { Button_ExecShellStop Button
+    Move(7,189,77,35)
+    Font = Font["Monospace"]
+    Background = &H5000A0&
+    Foreground = &HFFFFFF&
+    Mouse = Mouse.Pointing
+    Text = ("Stop")
+  }
+  { Button_Info Button
+    Move(14,1092,147,35)
+    Font = Font["Monospace"]
+    Background = &H5000A0&
+    Foreground = &HFFFFFF&
+    Mouse = Mouse.Pointing
+    Text = ("About")
+  }
+  { Separator2 Separator
+    Move(14,91,161,21)
+  }
+  { Button_ClearAll Button
+    Move(91,189,77,35)
+    Font = Font["Monospace"]
+    Background = &H5000A0&
+    Foreground = &HFFFFFF&
+    Mouse = Mouse.Pointing
+    Text = ("Clear All")
+  }
+  { Button_InfoExamples Button
+    Move(14,1050,147,35)
+    Font = Font["Monospace"]
+    Background = &H5000A0&
+    Foreground = &HFFFFFF&
+    Mouse = Mouse.Pointing
+    Text = ("Examples")
+  }
+}
